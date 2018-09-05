@@ -1,0 +1,2 @@
+class Asset(object):
+    pass
