@@ -3,7 +3,7 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6 (PyBedTime)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.6.6 (sftp://pi@raspberrypi:22/usr/local/bin/python3.6)" project-jdk-type="Python SDK" />
   <component name="PyCharmProfessionalAdvertiser">
     <option name="shown" value="true" />
   </component>
