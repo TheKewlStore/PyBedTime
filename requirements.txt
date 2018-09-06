@@ -1,4 +1,4 @@
-pigpio
+pigpio==1.40post1
 pyaudio==0.2.11
 Babel==2.6.0
 blinker==1.4
