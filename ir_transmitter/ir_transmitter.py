@@ -5,8 +5,6 @@ import subprocess
 import logging
 import sys
 import threading
-import datetime
-import requests
 
 
 logger = logging.getLogger("ir_transmitter")
@@ -108,6 +106,7 @@ class InsigniaController(IRTransmitter):
         self.batch_volume_increase = False
         self.last_powered_state_change = time.time()
         self.api_url = "http://{0}/api/".format(pc_hostname)
+        self.initialized = False
 
         # Assume that the volume will never exceed daytime max and we're going to set it to 0
         self.current_volume = self.daytime_volume
@@ -117,6 +116,9 @@ class InsigniaController(IRTransmitter):
 
         self.power_on()
         self.set_volume(0)
+
+        logger.info("InsigniaController initialized and ready for commands!")
+        self.initialized = True
 
     def power_on(self):
         # Iterate this twice in the hopes that the tvservice monitor will update with the current tv state
@@ -245,7 +247,7 @@ class InsigniaController(IRTransmitter):
 
         self.set_volume(self.daytime_volume)
 
-    def bedtime(self, url):
+    def bedtime(self):
         self.power_on()
 
         if self.display_mode == "STANDARD":
@@ -259,24 +261,20 @@ class InsigniaController(IRTransmitter):
 
         self.set_volume(self.bedtime_volume)
 
-        logger.info("Opening web browser to: " + url)
-        self.open_browser(url)
+        # logger.info("Opening web browser to: " + url)
+        # self.open_browser(url)
 
-    def open_browser(self, url):
-        response = requests.post(self.api_url + "open_webpage", json={"url": url})
-        assert response.status_code == 200
+    def update_configuration(self, configuration_data):
+        self.bedtime_volume = configuration_data.get("bedtime_volume", self.bedtime_volume)
+        self.daytime_volume = configuration_data.get("daytime_volume", self.daytime_volume)
+
+        logger.info("Volume settings after config update:")
+        logger.info("Bedtime volume: {0}".format(self.bedtime_volume))
+        logger.info("Daytime volume: {0}".format(self.daytime_volume))
 
 
 if __name__ == "__main__":
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
     controller = InsigniaController("insignia_commands.json")
-    controller.bedtime("https://www.twitch.tv/wintergaming")
-
-    # while True:
-    #     current_time = datetime.datetime.now()
-    #
-    #     if current_time.hour >= 23 and current_time.minute >= 30:
-    #         controller.bedtime("https://www.twitch.tv/wintergaming")
-    #     elif current_time.hour <= 10:
-    #         controller.daytime()
+    controller.bedtime()

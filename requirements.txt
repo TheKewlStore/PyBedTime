@@ -1,11 +1,16 @@
 blinker==1.4
+certifi==2018.8.24
+chardet==3.0.4
 click==6.7
 Flask==1.0.2
+idna==2.7
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
 pigpio==1.40.post1
 PyAudio==0.2.11
 pydub==0.22.1
+requests==2.19.1
+urllib3==1.23
 Werkzeug==0.14.1
 WTForms==2.2.1

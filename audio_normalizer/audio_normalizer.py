@@ -154,7 +154,7 @@ class AudioPlaybackStreamer(object):
         self.running = False
 
 
-if __name__ == "__main__":
+def start():
     aud_manager = pyaudio.PyAudio()
     normalizer = AudioInputNormalizer(aud_manager)
     streamer = AudioPlaybackStreamer(aud_manager, device_name="ns28ed200na14")
@@ -172,3 +172,7 @@ if __name__ == "__main__":
             time.sleep(.1)
 
     aud_manager.terminate()
+
+
+if __name__ == "__main__":
+    start()
