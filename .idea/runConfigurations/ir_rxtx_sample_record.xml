@@ -12,7 +12,7 @@
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/audio_normalizer/ir_rxtx_sample.py" />
+    <option name="SCRIPT_NAME" value="C:\Users\iwasf\PycharmProjects\PyBedTime\ir_transmitter\ir_rxtx_sample.py" />
     <option name="PARAMETERS" value="-g 18 -f insignia_commands.json KEY_MUTE KEY_UP KEY_LEFT KEY_OK -r" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />

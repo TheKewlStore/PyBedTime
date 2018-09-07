@@ -1,52 +1,26 @@
-import json
+import webbrowser
 
-from flask_security import SQLAlchemyUserDatastore, Security
-from flask_security.core import current_user
-
-from server import database
-
-from flask import Flask
+from flask import Flask, request, make_response, abort
 
 from server.default_configuration import DefaultConfiguration
-
-from server import session_manager
-from server.models import User, Role
 
 
 app = Flask(DefaultConfiguration.APPLICATION_NAME)
 app.config.from_object(DefaultConfiguration)
 
-with app.app_context():
-    database.initialize()
 
-    session_manager.set_database(database.instance())
+@app.route('/api/open_webpage', methods=["POST"])
+def open_webpage():
+    if not request.json or 'url' not in request.json:
+        abort(400)
 
-    user_datastore = SQLAlchemyUserDatastore(session_manager.get_database(), User, Role)
-    security = Security(app, user_datastore)
+    json_object = request.json
+    print(json_object)
 
-    session_manager.set_user_datastore(user_datastore)
-    session_manager.set_security_manager(security)
+    webbrowser.open_new_tab(json_object["url"])
 
-
-@app.before_first_request
-def create_user():
-    session_manager.get_database().create_all()
-    session_manager.get_user_datastore().create_user(email='admin', password='admin')
-    session_manager.get_database().session.commit()
-
-
-@app.route('/')
-def home():
-    if not current_user.is_authenticated:
-        return json.dumps({
-            "Error": "Unauthorized access!"
-        })
-
-    else:
-        return json.dumps({
-            "Test": "Test"
-        })
+    return make_response("", 200)
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=8080)
