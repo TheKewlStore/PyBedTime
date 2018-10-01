@@ -269,9 +269,6 @@ class InsigniaController(IRTransmitter):
 
         self.set_volume(self.bedtime_volume)
 
-        # logger.info("Opening web browser to: " + url)
-        # self.open_browser(url)
-
     def update_configuration(self, configuration_data):
         self.bedtime_volume = configuration_data.get("bedtime_volume", self.bedtime_volume)
         self.daytime_volume = configuration_data.get("daytime_volume", self.daytime_volume)

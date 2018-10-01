@@ -5,12 +5,11 @@ import pyaudio
 import requests
 import time
 import os
-import subprocess
-
 
 from flask import Flask, request, make_response, abort
 
-from audio_normalizer import AudioInputNormalizer, AudioPlaybackStreamer
+from audio_normalizer.audio_normalizer import AudioInputNormalizer, AudioPlaybackStreamer
+
 
 app = Flask("PyBedTime_PC_WebServer")
 PI_HOSTNAME = "raspberrypi"
