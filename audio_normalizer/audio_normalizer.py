@@ -32,6 +32,9 @@ def match_target_amplitude(sound, target_dbfs):
     return sound.apply_gain(change_in_dbfs)
 
 
+SAMPLE_RATE = 44100
+
+
 class AudioInputNormalizer(object):
     def __init__(self, audio_manager, target_dbfs=-40.0, device_name=None):
         """
@@ -45,7 +48,7 @@ class AudioInputNormalizer(object):
         self.target_dbfs = target_dbfs
         self.input_stream = None
         self.running = False
-        self.rate = 256000
+        self.rate = SAMPLE_RATE
         self.chunk_size = 1024
 
         if device_name:
@@ -55,11 +58,11 @@ class AudioInputNormalizer(object):
 
         self.input_stream = self.audio_manger.open(format=pyaudio.paInt16,
                                                    channels=2,
-                                                   rate=256000,
+                                                   rate=self.rate,
                                                    input=True,
                                                    frames_per_buffer=1024,
                                                    input_device_index=self.device_index)
-        self.record_rate_seconds = 0.1
+        self.record_rate_seconds = 0.5
         self.monitor_thread = threading.Thread(target=self.run)
         self.segment_queue = None
         """ :type: Queue"""
@@ -82,7 +85,7 @@ class AudioInputNormalizer(object):
             data = self.input_stream.read(self.chunk_size)
             frames.append(data)
 
-        return match_target_amplitude(AudioSegment(b''.join(frames), sample_width=2, channels=2, frame_rate=256000),
+        return match_target_amplitude(AudioSegment(b''.join(frames), sample_width=2, channels=2, frame_rate=self.rate),
                                       self.target_dbfs)
 
     def run(self):
@@ -114,7 +117,7 @@ class AudioPlaybackStreamer(object):
 
         self.output_stream = self.audio_manager.open(format=pyaudio.paInt16,
                                                      channels=2,
-                                                     rate=256000,
+                                                     rate=SAMPLE_RATE,
                                                      output=True,
                                                      frames_per_buffer=1024,
                                                      output_device_index=self.device_index)
@@ -156,8 +159,8 @@ class AudioPlaybackStreamer(object):
 
 def start():
     aud_manager = pyaudio.PyAudio()
-    normalizer = AudioInputNormalizer(aud_manager)
-    streamer = AudioPlaybackStreamer(aud_manager, device_name="ns28ed200na14")
+    normalizer = AudioInputNormalizer(aud_manager, device_name="VirtualCable")
+    streamer = AudioPlaybackStreamer(aud_manager, device_name="TV")
     seg_queue = Queue()
 
     normalizer.start_monitoring(seg_queue)

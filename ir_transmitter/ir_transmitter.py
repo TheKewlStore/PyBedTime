@@ -48,7 +48,12 @@ class IRTransmitter(object):
                 if ci not in marks_wid:
                     wf = self.carrier(self.frequency, ci)
                     self.pi.wave_add_generic(wf)
-                    marks_wid[ci] = self.pi.wave_create()
+
+                    try:
+                        marks_wid[ci] = self.pi.wave_create()
+                    except pigpio.error as err:
+                        logger.exception("Failed to generate IR waveform for command: "
+                                         + command + " - waveform was: " + str(wf), err)
 
                 wave[i] = marks_wid[ci]
 
@@ -96,7 +101,7 @@ class IRTransmitter(object):
 
 
 class InsigniaController(IRTransmitter):
-    def __init__(self, command_file, bedtime_volume=5, daytime_volume=45, pc_hostname="IAN-DESKTOP:8080"):
+    def __init__(self, command_file, bedtime_volume=15, daytime_volume=25, pc_hostname="IAN-DESKTOP:8080"):
         IRTransmitter.__init__(self, command_file)
 
         self.powered = False
@@ -112,8 +117,9 @@ class InsigniaController(IRTransmitter):
         self.current_volume = self.daytime_volume
 
         self.monitor_thread = threading.Thread(target=self._monitor_hdmi_events, daemon=True)
-        self.monitor_thread.start()
 
+    def initialize(self):
+        self.monitor_thread.start()
         self.power_on()
         self.set_volume(0)
 
@@ -122,7 +128,7 @@ class InsigniaController(IRTransmitter):
 
     def power_on(self):
         # Iterate this twice in the hopes that the tvservice monitor will update with the current tv state
-        # And then if we actually turned it off we know to turn it on again.
+        #  And then if we actually turned it off we know to turn it on again.
         if not self.powered:
             logger.info("Turning the power on first pass - not sure if it's on or not")
             self._power_cycle()
@@ -235,6 +241,7 @@ class InsigniaController(IRTransmitter):
 
     def daytime(self):
         self.power_on()
+        self.set_volume(0)
 
         if self.display_mode == "CUSTOM":
             self.transmit("KEY_MENU", .5)
@@ -242,13 +249,14 @@ class InsigniaController(IRTransmitter):
             self.transmit("KEY_OK", .25)
             self.transmit("KEY_UP", .25)
             self.transmit("KEY_OK", .25)
-            self.transmit("KEY_EXIT", .25)
+            self.transmit("KEY_EXIT", 1)
             self.display_mode = "STANDARD"
 
         self.set_volume(self.daytime_volume)
 
     def bedtime(self):
         self.power_on()
+        self.set_volume(0)
 
         if self.display_mode == "STANDARD":
             self.transmit("KEY_MENU", .5)
@@ -256,7 +264,7 @@ class InsigniaController(IRTransmitter):
             self.transmit("KEY_OK", .25)
             self.transmit("KEY_DOWN", .25)
             self.transmit("KEY_OK", .25)
-            self.transmit("KEY_EXIT", .25)
+            self.transmit("KEY_EXIT", 1)
             self.display_mode = "CUSTOM"
 
         self.set_volume(self.bedtime_volume)

@@ -5,10 +5,9 @@ from flask import Flask, make_response, request
 from ir_transmitter.ir_transmitter import InsigniaController
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 app = Flask("PyBedTime_TV_Controller")
 insignia_controller = InsigniaController("/home/pi/PyBedTime/insignia_commands.json")
-insignia_controller.daytime()
 
 
 @app.route('/api/bedtime', methods=["POST"])
@@ -42,4 +41,6 @@ def py_configuration():
 
 
 if __name__ == "__main__":
+    insignia_controller.initialize()
+    insignia_controller.daytime()
     app.run(host="0.0.0.0", port=5001)
