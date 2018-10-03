@@ -40,7 +40,11 @@ def py_configuration():
     return make_response("", 200)
 
 
-if __name__ == "__main__":
+def initialize():
     insignia_controller.initialize()
     insignia_controller.daytime()
-    app.run(host="0.0.0.0", port=5001)
+
+
+if __name__ == "__main__":
+    initialize()
+    app.run(host="raspberrypi", port=5001)

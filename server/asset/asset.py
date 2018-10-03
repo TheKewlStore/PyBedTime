@@ -1,2 +1,0 @@
-class Asset(object):
-    pass

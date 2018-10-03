@@ -6,8 +6,9 @@
       <sourceFolder url="file://$MODULE_DIR$/audio_normalizer" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ir_transmitter" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/venv27" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.6 (PyBedTime)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7 (PyBedTime)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

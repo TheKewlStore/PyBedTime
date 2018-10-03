@@ -116,7 +116,7 @@ class InsigniaController(IRTransmitter):
         # Assume that the volume will never exceed daytime max and we're going to set it to 0
         self.current_volume = self.daytime_volume
 
-        self.monitor_thread = threading.Thread(target=self._monitor_hdmi_events, daemon=True)
+        self.monitor_thread = threading.Thread(target=self._monitor_hdmi_events)
 
     def initialize(self):
         self.monitor_thread.start()

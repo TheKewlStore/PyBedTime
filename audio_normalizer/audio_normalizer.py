@@ -2,7 +2,7 @@ import threading
 import time
 import pyaudio
 
-from queue import Queue
+from Queue import Queue
 from math import ceil
 
 from pydub import AudioSegment
@@ -16,7 +16,7 @@ def lookup_device_index(audio_manager, device_name):
         device = audio_manager.get_device_info_by_host_api_device_index(0, device_id)
         current_name = device.get('name')
 
-        if device_name in current_name.lower():
+        if device_name.lower() in current_name.lower():
             return device_id
 
     raise KeyError("No audio device with the name " + device_name)
@@ -76,6 +76,7 @@ class AudioInputNormalizer(object):
         """
         self.segment_queue = segment_queue
         self.running = True
+        self.monitor_thread = threading.Thread(target=self.run)
         self.monitor_thread.start()
 
     def get_next_segment(self):
@@ -129,6 +130,7 @@ class AudioPlaybackStreamer(object):
     def start_playback(self, segment_queue):
         self.segment_queue = segment_queue
         self.running = True
+        self.playback_thread = threading.Thread(target=self.run)
         self.playback_thread.start()
 
     @staticmethod
