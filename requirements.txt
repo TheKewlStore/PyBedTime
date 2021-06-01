@@ -11,6 +11,6 @@ pigpio==1.40.post1
 PyAudio==0.2.11
 pydub==0.22.1
 requests==2.19.1
-urllib3==1.23
+urllib3==1.26.5
 Werkzeug==0.14.1
 WTForms==2.2.1
